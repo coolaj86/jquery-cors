@@ -1,4 +1,95 @@
+(function($) {
+
+      // CORS AJAX clone
+      $.cors = function(options) {
+        // TODO If not CORS fallback to proxy or getJSON
+        // TODO headers in options
+        options.success = options.success || function(data, text) {alert('no success callback specified');}
+        options.error = options.error || function(xhr, text, thrown) {alert('no fail callback specified');}
+        $.ajax(options);
+      };
+      $.corsSetup = function(options) {
+        $.ajaxSetup(options);
+      };
+
+      // CORS Verbs
+      $.getCORS = function(url, data, callback, type) {
+        options = {
+          url: url,
+          type: 'GET',
+          data: data,
+          success: callback,
+          dataType: type,
+        };
+        $.cors(options);
+      };
+      $.postCORS = function(url, data, callback, type) {
+        options = {
+          url: url,
+          type: 'POST',
+          data: data,
+          success: callback,
+          dataType: type,
+        };
+        $.cors(options);
+      };
+      $.putCORS = function(url, data, callback, type) {
+        options = {
+          url: url,
+          type: 'PUT',
+          data: data,
+          success: callback,
+          dataType: type,
+        };
+        $.cors(options);
+      };
+      $.deleteCORS = function(url, data, callback, type) {
+        options = {
+          url: url,
+          type: 'DELETE',
+          data: data,
+          success: callback,
+          dataType: type,
+        };
+        $.cors(options);
+      };
+
+      // CORS with JSON
+      $.postJSON = function(url, data, callback) {
+        $.ajaxSetup({
+          contentType: 'application/json; charset=utf-8',
+        });
+        $.postCORS(url, JSON.stringify(data), callback, 'json');
+      };
+      $.putJSON = function(url, data, callback) {
+        $.ajaxSetup({
+          contentType: 'application/json; charset=utf-8',
+        });
+        $.putCORS(url, JSON.stringify(data), callback, 'json');
+      };
+      $.deleteJSON = function(url, data, callback) {
+        $.deleteCORS(url, data, callback, 'json');
+      };
+      $.corsJSON = function(type, url, data, success, error) {
+        $.ajaxSetup({
+          error: error,
+          contentType: 'application/json; charset=utf-8',
+        });
+        $.cors({
+          type: type,
+          url: url,
+          data: data,
+          dataType: 'json',
+          success: success,
+          error: error
+        });
+      }
+
+})(jQuery);
+
+
 // You also need proxy_xmlhttp to use this
+// see example at http://www.coolaj86.info/cors_uploads
 
 (function($) {
 /**
@@ -11,7 +102,7 @@
  * @param function callback function to call on successful result [optional]
  * @param string   type     the type of data to be returned [optional]
  */
-$.getCORS = function (url, data, callback, type) {
+$.oldGetCORS = function (url, data, callback, type) {
     try {
         // Try using jQuery to get data
         jQuery.get(url, data, callback, type);
@@ -58,7 +149,7 @@ $.getCORS = function (url, data, callback, type) {
  * @param function callback a function to call on success [optional]
  * @param string   type     the type of data to be returned [optional]
  */
-$.postCORS = function (url, data, callback, type) {
+$.oldPostCORS = function (url, data, callback, type) {
     try {
         // Try using jQuery to POST
         jQuery.post(url, data, callback, type);
