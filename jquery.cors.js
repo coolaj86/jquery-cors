@@ -7,6 +7,29 @@
         options.success = options.success || function(data, text) {alert('no success callback specified');}
         options.error = options.error || function(xhr, text, thrown) {alert('no fail callback specified');}
         $.ajax(options);
+        $.ajaxSetup({
+          xhr: (function(){
+            var xhr = ( window.XMLHttpRequest && new window.XMLHttpRequest )
+                        || ( window.XDomainRequest && new window.XDomainRequest )
+                        || ( window.ActiveXObject && new window.ActiveXObject )
+                        || {};
+            var xhr2_capable = false;
+            try {
+              xhr2_capable = (xhr.withCredentials !== undefined);
+            } catch (ignore) {
+              xhr2_capable = true;
+            }
+            try {
+              xhr2_capable = (xhr.responseBody !== undefined);
+            } catch (ignore) {
+              xhr2_capable = true;
+            }
+            if (!xhr_capable) {
+              xhr = new jQuery.proxy_xmlhttp;
+            }
+            return xhr;
+          }())
+        });
       };
       $.corsSetup = function(options) {
         $.ajaxSetup(options);
@@ -88,9 +111,8 @@
 })(jQuery);
 
 
-// You also need proxy_xmlhttp to use this
-// see example at http://www.coolaj86.info/cors_uploads
 
+// These are for quick reference only. They'll be removed in the future 
 (function($) {
 /**
  * This is for Cross-site Origin Resource Sharing (CORS) requests.
