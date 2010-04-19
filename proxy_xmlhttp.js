@@ -1,5 +1,6 @@
 // XMLHTTP JS class is is developed by Alex Serebryakov (#0.9.1)
 // For more information, consult www.ajaxextended.com
+// Stolen from http://bit.ly/cpTekr
 
 // What's new in 0.9.1:
 // - fixed the _createQuery function (used to force multipart requests)
@@ -7,12 +8,12 @@
 // - fixed the _parseXML function (bug in the ActiveX parsing section)
 // - fixed the _destroyScripts function (DOM errors reported)
 
-WDN.proxy_xmlhttp = function() {
+jQuery.proxy_xmlhttp = function(apiURL) {
 
   // The following two options are configurable
   // you don't need to change the rest. Plug & play!
   var _maximumRequestLength = 1500;
-  var _apiURL = 'http://ucommxsrv1.unl.edu/xmlhttp/';
+  var _apiURL = apiURL || 'http://' + window.location.hostname + '/xmlhttp/';
 
   this.status = null;
   this.statusText = null;
@@ -159,6 +160,9 @@ WDN.proxy_xmlhttp = function() {
     }
     if(method.toLowerCase() != 'get' &&
       method.toLowerCase() != 'post' &&
+      method.toLowerCase() != 'put' &&
+      method.toLowerCase() != 'delete' &&
+      method.toLowerCase() != 'options' &&
       method.toLowerCase() != 'head') {
       return _throwError('Please, specify either a GET, POST or a HEAD method');
     }
