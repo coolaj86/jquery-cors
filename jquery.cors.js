@@ -24,7 +24,7 @@
             } catch (ignore) {
               xhr2_capable = true;
             }
-            if (!xhr_capable) {
+            if (!xhr2_capable) {
               xhr = new jQuery.proxy_xmlhttp;
             }
             return xhr;
